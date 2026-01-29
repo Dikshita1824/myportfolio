@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Project | Java Console Suite</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #0b0f10;
+            --text: #ffffff;
+            --accent: #26a69a; 
+            --nav-bg: rgba(11, 15, 16, 0.95);
+            --gray-text: #a0a0a0;
+            --nav-border: rgba(255, 255, 255, 0.05);
+            --card-bg: #111819;
+            --code-bg: #050708;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            --search-bg: #0b0f10;
+        }
+
+        .light {
+            --bg: #ebedef; 
+            --text: #0a0808; 
+            --nav-bg: #d1cbcb;
+            --gray-text: #383636;
+            --nav-border: rgba(0, 0, 0, 0.1);
+            --card-bg: #d1cbcb;
+            --code-bg: #1a1a1a;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --search-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); transition: all 0.4s ease; overflow-x: hidden; line-height: 1.6; }
+
+        /* --- SEARCH BAR --- */
+        .search-top-bar {
+            position: fixed; top: -80px; left: 0; width: 100%; height: 70px;
+            background: var(--search-bg); display: flex; align-items: center;
+            padding: 0 8%; z-index: 2000; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 1px solid var(--nav-border); box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .search-top-bar.active { transform: translateY(80px); }
+        .search-inner { width: 100%; display: flex; align-items: center; justify-content: space-between; }
+        .search-top-bar input { width: 90%; background: transparent; border: none; color: var(--text); font-size: 16px; outline: none; }
+        .close-search { color: var(--text); font-size: 16px; cursor: pointer; opacity: 0.7; }
+        .search-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1500; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .search-overlay.active { opacity: 1; visibility: visible; }
+
+        /* --- NAVBAR FIX --- */
+        .navbar {
+            display: flex; align-items: center; padding: 15px 60px;
+            background: var(--nav-bg); backdrop-filter: blur(15px);
+            position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--nav-border);
+        }
+        .logo-section { font-size: 24px; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: auto;}
+        
+        .nav-links { display: flex; list-style: none; gap: 30px; align-items: center; margin-right: 30px;}
+        .nav-links a { color: var(--text); text-decoration: none; font-size: 15px; font-weight: 500; padding: 8px 18px; border-radius: 30px; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { background: var(--accent); color: white !important; }
+
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .social-icons { display: flex; gap: 30px; }
+        .social-icons a { color: var(--text); opacity: 0.8; font-size: 17px; transition: 0.3s; }
+        .social-icons a:hover { color: var(--accent); transform: translateY(-2px); opacity: 1; }
+        .separator { width: 1px; height: 20px; background: var(--nav-border); }
+
+        /* Mobile Socials (Hidden by default) */
+        .mobile-socials { display: none; }
+
+        .btn-group { display: flex; align-items: center; gap: 10px; }
+        .theme-toggle { background: none; border: none; color: var(--text); font-size: 18px; cursor: pointer; margin-right: 20px; }
+        .search-btn {
+            background: var(--accent); color: white; width: 38px; height: 38px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            border: none; cursor: pointer; transition: 0.3s;
+        }
+
+        .menu-toggle { display: none; font-size: 24px; cursor: pointer; color: var(--text); }
+
+        /* --- CONTENT SECTIONS --- */
+        .hero-section { padding: 60px 8%; text-align: center; }
+        .hero-section h1 { font-size: clamp(30px, 5vw, 45px); margin-bottom: 10px; }
+        .hero-section span { color: var(--accent); }
+
+        .project-overview { 
+            background: var(--card-bg); border: 1px solid var(--nav-border); 
+            padding: clamp(20px, 5vw, 50px); border-radius: 30px; margin: 0 8% 40px; box-shadow: var(--card-shadow);
+        }
+        .project-overview h2 { color: var(--accent); margin-bottom: 20px; font-size: 28px; }
+        .project-overview p { color: var(--text); font-size: 16px; margin-bottom: 20px; text-align: justify;}
+
+        .github-link { display: inline-block; padding: 12px 35px; border: 2px solid var(--accent); color: #fff !important; text-decoration: none; border-radius: 50px; font-weight: 600; transition: 0.4s; background: var(--accent); box-shadow: 0 0 15px rgba(38, 166, 154, 0.3); }
+        .github-link:hover { background: transparent; color: var(--accent) !important; box-shadow: 0 0 10px var(--accent), 0 0 30px var(--accent); transform: translateY(-3px); }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 0 8% 60px; }
+        .feature-item { 
+            background: var(--card-bg); border: 1px solid var(--nav-border); 
+            padding: 25px; border-radius: 20px; transition: 0.3s;
+        }
+        .feature-item:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .feature-item h3 { color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-size: 18px;}
+
+        .console-box {
+            background: var(--code-bg); border-radius: 12px; padding: 15px;
+            font-family: 'Fira Code', monospace; color: var(--accent);
+            font-size: 12px; white-space: pre; overflow-x: auto;
+            border: 1px solid rgba(38, 166, 154, 0.3); margin-top: 15px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .badge-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+        .tech-badge { 
+            background: var(--bg); padding: 5px 12px; border-radius: 50px; 
+            font-size: 11px; border: 1px solid var(--nav-border); color: var(--gray-text);
+        }
+
+        footer { text-align: center; padding: 40px; border-top: 1px solid var(--nav-border); color: var(--gray-text); }
+
+        /* --- RESPONSIVE FIXES --- */
+        @media (max-width: 1100px) {
+            .navbar { padding: 15px 30px; justify-content: space-between;}
+            .nav-links { display: none; margin-right: 0;} 
+            .menu-toggle { display: block; order: -1; } /* Hamburger stays left */
+            .logo-section { margin-right: auto; margin-left: 20px;}
+            
+            .nav-links.mobile-active {
+                display: flex; flex-direction: column; position: fixed;
+                top: 70px; left: 0; width: 100%; background: var(--nav-bg);
+                padding: 30px 20px; border-bottom: 1px solid var(--nav-border);
+                gap: 20px; z-index: 999; animation: slideDown 0.3s ease;
+                align-items: center;
+            }
+
+            .mobile-socials { 
+                display: flex; gap: 5px; margin-top: 10px; 
+                padding-top: 20px; border-top: 1px solid var(--nav-border);
+                width: 80%; justify-content: center;
+            }
+            .mobile-socials a { color: var(--text); font-size: 15px; }
+
+            .social-icons, .separator { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .feature-grid { grid-template-columns: 1fr; }
+            .hero-section { padding: 40px 5%; }
+            .project-overview { margin: 0 5% 40px; }
+            .feature-grid { margin: 0 5% 60px; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-overlay" id="overlay" onclick="toggleSearch()"></div>
+
+    <div class="search-top-bar" id="searchBar">
+        <div class="search-inner">
+            <input type="text" placeholder="Search projects..." id="searchInput">
+            <div class="close-search" onclick="toggleSearch()">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+    </div>
+
+    <header class="navbar">
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <a href="index.html" class="logo-section">
+             dikshii
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="projects.html" class="active">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <div class="separator"></div>
+            
+            <div class="mobile-socials">
+                <a href="https://twitter.com/@dikshita_m2408" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/dikshitaaaa_08" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/dikshita-mittal-a14922379" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/Dikshita1824" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </ul>
+
+        <div class="nav-right">
+             <div class="social-icons">
+                <a href="https://twitter.com/@dikshita_m2408" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/dikshitaaaa_08" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/dikshita-mittal-a14922379" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/Dikshita1824" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+            <div class="separator"></div>
+            <div class="btn-group">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <button class="search-btn" onclick="toggleSearch()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <h1>ASCII <span>Art Suite</span></h1>
+        <p style="color: var(--gray-text);">Java-Based Character Mapping & Visual Terminal Renderer</p>
+    </section>
+
+    <section class="project-overview">
+        <h2> Project Overview</h2>
+        <p>The ASCII Project is a comprehensive console-based utility developed using <b>Core Java</b>. Unlike standard text output, this system uses <b>2D Dimensional Mapping</b> to store font structures. It translates simple user strings into high-impact visual patterns. The core logic relies on an <b>ASCII Offset calculation (Input - 64)</b> to pinpoint the exact memory location of a character within a pre-defined 5xN string array.</p>
+        
+        <div class="badge-container">
+            <span class="tech-badge"><i class="fas fa-check"></i> BCA Semester 3</span>
+            <span class="tech-badge"><i class="fas fa-check"></i> Java JDK 17+</span>
+            <span class="tech-badge"><i class="fas fa-check"></i> Modular Programming</span>
+            <span class="tech-badge"><i class="fas fa-check"></i> String Tokenization</span>
+        </div>
+        
+        <p>This project was built to demonstrate <b>Array Manipulation</b> and <b>Nested Iteration</b>—fundamental concepts in computer science. It handles everything from single letters to multi-line messages with real-time terminal rendering.</p>
+        <br>
+
+        <a href="https://github.com/Dikshita1824/ASCII-Project.git" target="_blank" class="github-link">
+            <i class="fab fa-github"></i> View Source Code
+        </a>
+    </section>
+
+    <div class="feature-grid">
+        <div class="feature-item">
+            <h3><i class="fas fa-font"></i> 1. Letter Processing</h3>
+            <p>Prints a single large-scale ASCII character.</p>
+            <div class="console-box">
+Enter Letter: A
+ XXX 
+X   X
+XXXXX
+X   X
+X   X</div>
+        </div>
+
+        <div class="feature-item">
+            <h3><i class="fas fa-spell-check"></i> 2. Word Conversion</h3>
+            <p>Takes a full word and maps each character horizontally.</p>
+            <div class="console-box">
+Enter Word: DIKSHI
+XXXX XXX X  X  XXX  X  X XXX
+X   X  X  X X  X     X  X  X 
+X   X  X  XX    XXX  XXXX  X 
+X   X  X  X X      X X  X  X 
+XXXX  XXX X  X  XXX  X  X XXX</div>
+        </div>
+
+        <div class="feature-item">
+            <h3><i class="fas fa-quote-left"></i> 3. Sentence Rendering</h3>
+            <p>Includes space detection for readability.</p>
+            <div class="console-box">
+Input: HI BCA
+X  X XXX  XXX   XXXX   XXX
+X  X  X   X  X  X  X   X  X
+XXXX  X   XXXX  X      XXXX
+X  X  X   X  X  X  X   x  x  
+x  x XXX  XXXX  XXXX   x  x</div>
+        </div>
+
+        <div class="feature-item">
+            <h3><i class="fas fa-envelope-open-text"></i> 4. Multi-line Message</h3>
+            <p>Stores lines in a List until 'STOP' is triggered.</p>
+            <div class="console-box">
+Type STOP to finish:
+> LINE 1
+> STOP
+[...Generating Art Flow...]</div>
+        </div>
+
+        <div class="feature-item">
+            <h3><i class="fas fa-sliders-h"></i> 5. Alphabet Range</h3>
+            <p>Generates a sequence from Start to End.</p>
+            <div class="console-box">
+Start: A | End: C
+ XXX  XXXX  XXXX
+X   X X   X X   
+XXXXX XXXX  X   
+x   x x   x x 
+x   x XXXX  XXXX</div>
+        </div>
+
+        <div class="feature-item">
+            <h3><i class="fas fa-sort-numeric-up"></i> 6. Numeric Mapping</h3>
+            <p>Dedicated array logic for digits 0-9.</p>
+            <div class="console-box">
+Input: 2026
+XXXX X  X XXXX XXXX
+   X X  X    X X   
+XXXX X  X XXXX XXXX
+X    X  X X    X  X
+XXXX XXXX XXXX XXXX</div>
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; padding: 40px 8%; background: var(--card-bg); border-top: 1px solid var(--nav-border);">
+        <a href="pattern.html" style="text-decoration: none; background: var(--accent); color: white; padding: 12px 35px; border-radius: 50px; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-arrow-left"></i> Prev
+        </a>
+        <a href="projects.html" style="text-decoration: none; background: var(--accent); color: white; padding: 12px 35px; border-radius: 50px; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 10px;">
+            Next <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+
+
+     <footer style="background: var(--card-bg); border-top: 1px solid var(--nav-border); padding: 50px 8% 20px; margin-top: 50px; color: var(--text);">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; text-align: center; align-items: start;">
+            
+            <div>
+                <h4 style="color: var(--accent); margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Contact Us</h4>
+                <p style="font-size: 14px; margin-bottom: 8px;"><i class="fas fa-envelope" style="color: var(--accent); margin-right: 8px;"></i> dikshitamittal620@gmail.com</p>
+                <p style="font-size: 14px;"><i class="fas fa-phone-alt" style="color: var(--accent); margin-right: 8px;"></i> +91 1234567890</p>
+            </div>
+
+            <div>
+                <h3 style="color: var(--text); margin-bottom: 10px; font-size: 20px;">Dikshita Mittal</h3>
+                <p style="color: var(--accent); font-weight: 500; font-size: 14px;">
+                <i class="fas fa-university"></i> 
+                <a href="https://www.dezyneecole.com/" target="_blank" style="color: inherit; text-decoration: none; border-bottom: 1px dashed var(--accent);">
+                    Dezyne E'cole College, Ajmer
+                </a>
+            </p>
+            </div>
+
+            <div>
+                <h4 style="color: var(--accent); margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Quick Links</h4>
+                <div style="display: flex; justify-content: center; gap: 15px; font-size: 14px; flex-wrap: wrap;">
+                    <style>
+                        .footer-link {
+                            position: relative;
+                            color: var(--gray-text);
+                            text-decoration: none;
+                            transition: 0.3s;
+                            padding-bottom: 2px;
+                        }
+                        .footer-link::after {
+                            content: '';
+                            position: absolute;
+                            width: 0;
+                            height: 2px;
+                            bottom: 0;
+                            left: 0;
+                            background-color: var(--accent);
+                            transition: width 0.3s ease;
+                        }
+                        .footer-link:hover { color: var(--accent); }
+                        .footer-link:hover::after { width: 100%; }
+                    </style>
+                    <a href="index.html" class="footer-link">Home</a>
+                    <a href="about.html" class="footer-link">About</a>
+                    <a href="projects.html" class="footer-link">Projects</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 20px; margin: 30px 0; padding: 20px 0; border-top: 1px solid var(--nav-border);">
+            <a href="https://twitter.com/@dikshita_m2408" target="_blank" style="color: var(--text); font-size: 18px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com/dikshitaaaa_08" target="_blank" style="color: var(--text); font-size: 18px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/in/dikshita-mittal-a14922379" target="_blank" style="color: var(--text); font-size: 18px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/Dikshita1824" target="_blank" style="color: var(--text); font-size: 18px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'"><i class="fab fa-github"></i></a>
+            
+        </div>
+
+        <div style="text-align: center; color: var(--gray-text); font-size: 12px; opacity: 0.8;">
+            <p>&copy; 2026 <b>Dikshita Mittal</b> | All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle("light");
+            const icon = document.querySelector(".theme-toggle i");
+            icon.className = document.body.classList.contains("light") ? "fas fa-moon" : "fas fa-sun";
+        }
+
+        function toggleSearch() {
+            const bar = document.getElementById("searchBar");
+            const overlay = document.getElementById("overlay");
+            bar.classList.toggle("active");
+            overlay.classList.toggle("active");
+            if (bar.classList.contains("active")) {
+                setTimeout(() => document.getElementById("searchInput").focus(), 400);
+            }
+        }
+
+        function toggleMenu() {
+            const nav = document.getElementById("navLinks");
+            nav.classList.toggle("mobile-active");
+            const icon = document.querySelector(".menu-toggle i");
+            icon.className = nav.classList.contains("mobile-active") ? "fas fa-times" : "fas fa-bars";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Dikshita Mittal</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #0b0f10;
+            --text: #ffffff;
+            --accent: #26a69a;
+            --nav-bg: rgba(11, 15, 16, 0.95);
+            --gray-text: #a0a0a0;
+            --nav-border: rgba(255, 255, 255, 0.05);
+            --card-bg: #111819;
+            --search-bg: #0b0f10;
+            --glass: rgba(255, 255, 255, 0.03);
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        }
+
+        .light {
+            --bg: #ebedef; 
+            --text: #0a0808; 
+            --nav-bg: #d1cbcb;
+            --gray-text: #383636;
+            --nav-border: rgba(0, 0, 0, 0.1);
+            --card-bg: #d1cbcb;
+            --search-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); transition: all 0.4s ease; overflow-x: hidden; }
+
+        /* --- SEARCH TOP BAR --- */
+        .search-top-bar {
+            position: fixed; top: -80px; left: 0; width: 100%; height: 70px;
+            background: var(--search-bg); display: flex; align-items: center;
+            padding: 0 8%; z-index: 2000; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 1px solid var(--nav-border); box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .search-top-bar.active { transform: translateY(80px); }
+        .search-inner { width: 100%; display: flex; align-items: center; justify-content: space-between; }
+        .search-top-bar input { width: 90%; background: transparent; border: none; color: var(--text); font-size: 16px; outline: none; }
+        .close-search { color: var(--text); font-size: 18px; cursor: pointer; opacity: 0.7; }
+        .search-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1500; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .search-overlay.active { opacity: 1; visibility: visible; }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            display: flex; align-items: center; padding: 15px 60px;
+            background: var(--nav-bg); backdrop-filter: blur(15px);
+            position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--nav-border);
+        }
+        .logo-section { font-size: 24px; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+        .nav-links { display: flex; list-style: none; gap: 20px; margin-left: auto; margin-right: 30px; align-items: center; }
+        .nav-links a { color: var(--text); text-decoration: none; font-size: 15px; font-weight: 500; padding: 8px 18px; border-radius: 30px; transition: 0.3s; }
+        .nav-links a:hover { background: var(--accent); color: white !important; }
+        .nav-links a.active { color: var(--accent); }
+        .separator { width: 1px; height: 20px; background: var(--nav-border); margin: 0 10px; }
+        
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .social-icons { display: flex; gap: 30px; }
+        .social-icons a { color: var(--text); opacity: 0.8; font-size: 16px; transition: 0.3s; }
+        .social-icons a:hover { color: var(--accent); transform: translateY(-2px); }
+        .btn-group { display: flex; align-items: center; gap: 15px; }
+        .theme-toggle { background: none; border: none; color: var(--text); font-size: 18px; cursor: pointer; margin-right: 20px; }
+        .search-btn { background: var(--accent); color: white; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
+        .menu-toggle { display: none; font-size: 20px; cursor: pointer; color: var(--text); }
+
+        /* --- ABOUT SECTION --- */
+        .about-section { padding: 60px 8% 20px; display: flex; flex-wrap: wrap; gap: 40px; align-items: center; }
+        .about-img-container { flex: 1; min-width: 300px; text-align: center; }
+        .about-img-container img { width: 100%; max-width: 380px; border-radius: 25px; border: 8px solid var(--card-bg); box-shadow: var(--card-shadow); }
+        .about-card { flex: 1.5; min-width: 350px; background: var(--card-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--nav-border); }
+        .about-card h2 { color: var(--accent); font-size: 32px; margin-bottom: 20px; }
+        .about-card p { color: var(--gray-text); font-size: 16px; margin-bottom: 15px; line-height: 1.8; }
+
+        /* --- SKILLS & EDUCATION CARDS --- */
+        .unified-card-container { padding: 20px 8% 80px; }
+        .unified-card { background: var(--card-bg); padding: 50px; border-radius: 40px; border: 1px solid var(--nav-border); box-shadow: var(--card-shadow); }
+        .skills-grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+
+        .section-title { color: var(--accent); font-size: 24px; margin-bottom: 25px; display: flex; align-items: center; gap: 12px; }
+
+        .skills-container { display: flex; flex-wrap: wrap; gap: 15px; }
+        .skill-box { 
+            background: var(--glass); 
+            padding: 15px 25px; 
+            border-radius: 15px; 
+            border: 1px solid var(--nav-border); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 10px;
+            width: 130px;
+            transition: 0.3s;
+        }
+        .skill-box i { font-size: 24px; color: var(--accent); }
+        .skill-box span { font-size: 14px; font-weight: 500; }
+        .skill-box:hover { background: var(--accent); transform: translateY(-5px); }
+        .skill-box:hover i, .skill-box:hover span { color: white; }
+
+        .edu-item { margin-bottom: 25px; position: relative; padding-left: 20px; border-left: 2px solid var(--accent); }
+        .edu-item h4 { font-size: 18px; color: var(--text); margin-bottom: 5px; }
+        .edu-item p { color: var(--gray-text); font-size: 14px; margin-bottom: 5px; }
+        .edu-badge { display: inline-block; background: var(--accent); color: white; padding: 2px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-right: 5px; }
+        .winner-badge { background: #ffd700; color: #000; }
+
+        @media (max-width: 992px) {
+            .navbar { padding: 15px 30px; }
+            .menu-toggle { display: block; order: 3; }
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--nav-bg); flex-direction: column; padding: 20px; }
+            .nav-links.active { display: flex; }
+            .skills-grid-layout { grid-template-columns: 1fr; }
+            .about-section { flex-direction: column; text-align: center; }
+            .skills-container { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-overlay" id="overlay" onclick="toggleSearch()"></div>
+
+    <div class="search-top-bar" id="searchBar">
+        <div class="search-inner">
+            <input type="text" placeholder="Type and hit enter..." id="searchInput">
+            <div class="close-search" onclick="toggleSearch()"><i class="fas fa-times"></i></div>
+        </div>
+    </div>
+
+    <header class="navbar">
+        <div class="logo-section"> dikshii</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html" class="active">About</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <div class="separator"></div>
+        </ul>
+
+        <div class="nav-right">
+            <div class="social-icons">
+                <a href="https://twitter.com/@dikshita_m2408" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/dikshitaaaa_08" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/dikshita-mittal-a14922379" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/Dikshita1824" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+            <div class="separator"></div>
+            <div class="btn-group">
+                <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-sun"></i></button>
+                <button class="search-btn" onclick="toggleSearch()"><i class="fas fa-search"></i></button>
+                <i class="fas fa-bars menu-toggle" onclick="toggleMenu()"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="about-section">
+        <div class="about-img-container">
+            <img src="7.png" alt="Dikshita Mittal">
+        </div>
+       <div class="about-card">
+            <h2>About Me</h2>
+            <p>I am <strong>Dikshita Mittal</strong>, a dedicated BCA student with a core focus on software engineering and modern web development. My goal is to bridge the gap between complex backend logic and elegant frontend design.</p>
+            <p>Currently studying at <strong>Dezyne E’Cole College, Ajmer</strong>, I am passionate about creating user-centric digital experiences. I believe that every line of code should serve a purpose and every design should tell a story.</p>
+            <p>Beyond coding, I have a strong interest in management and data organization, which I've refined through specialized courses and hands-on academic projects.</p>
+        </div>
+    </section>
+
+    <div class="unified-card-container">
+        <div class="unified-card">
+            <div class="skills-grid-layout">
+                <div class="expertise-side">
+                    <h3 class="section-title"><i class="fas fa-laptop-code"></i> Skills & Expertise</h3>
+                    <br>
+                    <br>
+                    <div class="skills-container">
+                        <div class="skill-box"><i class="fab fa-html5"></i><span>HTML5</span></div>
+                        <div class="skill-box"><i class="fab fa-css3-alt"></i><span>CSS3</span></div>
+                        <div class="skill-box"><i class="fab fa-bootstrap"></i><span>Bootstrap</span></div>
+                        <div class="skill-box"><i class="fab fa-js"></i><span>JavaScript</span></div>
+                        <div class="skill-box"><i class="fab fa-java"></i><span>Java</span></div>
+                        <div class="skill-box"><i class="fas fa-terminal"></i><span>C</span></div>
+                        <div class="skill-box"><i class="fas fa-code"></i><span>C++ </span></div>
+                        <div class="skill-box"><i class="fas fa-database"></i><span>SQL</span></div>
+                        <div class="skill-box"><i class="fas fa-file-invoice-dollar"></i><span>Tally</span></div>
+                    </div>
+                </div>
+
+                <div class="education-side">
+                    <h3 class="section-title"><i class="fas fa-user-graduate"></i> Education & Achievements</h3>
+                    
+                    <div class="edu-item">
+                        <h4>Bachelor of Computer Applications (BCA)</h4>
+                        <p>Dezyne E'cole College, Ajmer</p>
+                        <span class="edu-badge">Currently Pursuing</span>
+                        <span class="edu-badge"><i class="fas fa-award"></i> 2nd Position - Identity Exhibition 2024</span>
+                    </div>
+
+                    <div class="edu-item">
+                        <h4>Maharshi Dayanand Saraswati University (MDSU)</h4>
+                        <p>Affiliating University, Ajmer</p>
+                        <span class="edu-badge">Current SGPA: 7.30</span>
+                    </div>
+
+                    <div class="edu-item">
+                        <h4>Senior Secondary Education </h4>
+                        <p>St. Mary's Convent Sr. Sec. School, Ajmer</p>
+                        <span class="edu-badge">Percentage: 65%</span>
+                    </div>
+
+                    <div class="edu-item">
+                        <h4>Secondary Education</h4>
+                        <p>St. Mary's Convent Sr. Sec. School, Ajmer</p>
+                        <span class="edu-badge">Percentage: 75%</span>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="background: var(--card-bg); border-top: 1px solid var(--nav-border); padding: 50px 8% 20px; margin-top: 50px; color: var(--text);">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; text-align: center; align-items: start;">
+            
+            <div>
+                <h4 style="color: var(--accent); margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Contact Us</h4>
+                <p style="font-size: 14px; margin-bottom: 8px;"><i class="fas fa-envelope" style="color: var(--accent); margin-right: 8px;"></i> dikshitamittal620@gmail.com</p>
+                <p style="font-size: 14px;"><i class="fas fa-phone-alt" style="color: var(--accent); margin-right: 8px;"></i> +91 1234567890</p>
+            </div>
+
+            <div>
+                <h3 style="color: var(--text); margin-bottom: 10px; font-size: 20px;">Dikshita Mittal</h3>
+                <p style="color: var(--accent); font-weight: 500; font-size: 14px;">
+                <i class="fas fa-university"></i> 
+                <a href="https://www.dezyneecole.com/" target="_blank" style="color: inherit; text-decoration: none; border-bottom: 1px dashed var(--accent);">
+                    Dezyne E'cole College, Ajmer
+                </a>
+                </p>
+            </div>
+
+            <div>
+                <h4 style="color: var(--accent); margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Quick Links</h4>
+                <div style="display: flex; justify-content: center; gap: 15px; font-size: 14px; flex-wrap: wrap;">
+                    <style>
+                        .footer-link { position: relative; color: var(--gray-text); text-decoration: none; transition: 0.3s; padding-bottom: 2px; }
+                        .footer-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 0; background-color: var(--accent); transition: width 0.3s ease; }
+                        .footer-link:hover { color: var(--accent); }
+                        .footer-link:hover::after { width: 100%; }
+                    </style>
+                    <a href="index.html" class="footer-link">Home</a>
+                    <a href="about.html" class="footer-link">About</a>
+                    <a href="projects.html" class="footer-link">Projects</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </div>
+
+       <div style="display: flex; justify-content: center; gap: 20px; margin: 30px 0; padding: 20px 0; border-top: 1px solid var(--nav-border);">
+            <a href="https://twitter.com/@dikshita_m2408" target="_blank" style="color: var(--text); font-size: 18px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com/dikshitaaaa_08" target="_blank" style="color: var(--text); font-size: 18px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/in/dikshita-mittal-a14922379" target="_blank" style="color: var(--text); font-size: 18px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/Dikshita1824" target="_blank" style="color: var(--text); font-size: 18px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'"><i class="fab fa-github"></i></a>
+            
+        </div>
+
+        <div style="text-align: center; color: var(--gray-text); font-size: 12px; opacity: 0.8;">
+            <p>&copy; 2026 <b>Dikshita Mittal</b> | All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle("light");
+            const icon = document.querySelector(".theme-toggle i");
+            icon.className = document.body.classList.contains("light") ? "fas fa-moon" : "fas fa-sun";
+        }
+        function toggleSearch() {
+            const bar = document.getElementById("searchBar");
+            const overlay = document.getElementById("overlay");
+            bar.classList.toggle("active");
+            overlay.classList.toggle("active");
+            if (bar.classList.contains("active")) {
+                setTimeout(() => document.getElementById("searchInput").focus(), 400);
+            }
+        }
+        function toggleMenu() {
+            document.getElementById("navLinks").classList.toggle("active");
+        }
+    </script>
+</body>
+</html>

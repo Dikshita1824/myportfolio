@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saree Collection | Dikshita Mittal</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #0b0f10;
+            --text: #ffffff;
+            --accent: #26a69a;
+            --nav-bg: rgba(11, 15, 16, 0.98);
+            --gray-text: #a0a0a0;
+            --nav-border: rgba(255, 255, 255, 0.05);
+            --card-bg: #111819;
+            --search-bg: #0b0f10;
+            --glass: rgba(255, 255, 255, 0.03);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            --icon-color: #ffffff;
+            --img-container-bg: transparent; 
+        }
+
+        .light {
+            --bg: #ebedef; 
+            --text: #0a0808; 
+            --nav-bg: rgba(209, 203, 203, 0.98);
+            --gray-text: #383636;
+            --nav-border: rgba(0, 0, 0, 0.1);
+            --card-bg: #d1cbcb;
+            --search-bg: #ffffff;
+            --glass: rgba(0, 0, 0, 0.04);
+            --card-shadow: 0 10px 25px rgba(0,0,0,0.06);
+            --icon-color: #0a0808; 
+            --img-container-bg: #2c2d2d; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); transition: all 0.4s ease; overflow-x: hidden; line-height: 1.6; }
+
+        /* --- NAVBAR --- */
+        .navbar { 
+            display: flex; align-items: center; padding: 15px 60px; 
+            background: var(--nav-bg); backdrop-filter: blur(15px); 
+            position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--nav-border); 
+            justify-content: space-between;
+        }
+        .logo-section { font-size: 24px; font-weight: 700; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 10px; z-index: 1001; }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--text);
+            z-index: 1001;
+        }
+
+        .nav-links { display: flex; list-style: none; gap: 20px; margin-left: auto; }
+        .nav-links a { color: var(--text); text-decoration: none; font-size: 15px; font-weight: 500; padding: 8px 18px; border-radius: 30px; transition: 0.3s; }
+        .nav-links a:hover { background: var(--accent); color: white !important; }
+        
+        .nav-right { display: flex; align-items: center; gap: 10px; margin-left: 20px;}
+        .social-icons { display: flex; gap: 30px; }
+        .social-icons i { cursor: pointer; color: var(--icon-color); opacity: 0.9; font-size: 16px; transition: 0.3s; }
+        .social-icons i:hover { color: var(--accent); opacity: 1; transform: translateY(-3px); }
+        .theme-toggle { background: none; border: none; color: var(--icon-color); font-size: 18px; cursor: pointer; margin: 0 10px; margin-right: 20px; }
+
+        /* --- SEARCH BAR --- */
+        .search-top-bar { position: fixed; top: -80px; left: 0; width: 100%; height: 70px; background: var(--search-bg); display: flex; align-items: center; padding: 0 8%; z-index: 2000; transition: 0.4s; border-bottom: 1px solid var(--nav-border); }
+        .search-top-bar.active { transform: translateY(80px); }
+        .search-btn { background: var(--accent); color: white; width: 35px; height: 35px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+        .nav-divider { width: 1px; height: 20px; background: var(--nav-border); margin: 0 20px; }
+
+        /* --- ABOUT SECTION --- */
+        .about-box { 
+            background: var(--card-bg); border: 1px solid var(--nav-border); padding: 60px; border-radius: 30px; margin: 40px 8%; 
+            display: flex; align-items: center; gap: 50px; box-shadow: var(--card-shadow); animation: fadeIn 1s ease;
+        }
+
+        .about-text { flex: 1.2; }
+        .about-text h2 { font-size: 35px; margin-bottom: 20px; color: var(--accent); }
+        .about-text p { margin-bottom: 15px; color: var(--text); font-size: 15px; }
+        .about-badges { display: flex; gap: 12px; margin-top: 25px; flex-wrap: wrap; }
+        .badge-item { background: var(--bg); border: 1px solid var(--nav-border); padding: 8px 18px; border-radius: 50px; font-size: 13px; display: flex; align-items: center; gap: 8px; color: var(--gray-text); }
+        .badge-item i { color: var(--accent); }
+
+        .about-image-container { flex: 0.8; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .about-image { width: 100%; max-width: 450px; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; border: 1px solid var(--nav-border); box-shadow: var(--card-shadow); background-color: var(--img-container-bg); display: flex; align-items: center; justify-content: center; transition: 0.4s ease; }
+        .about-image img { width: 100%; height: 100%; object-fit: contain; transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform: scale(0.9); }
+
+        .live-btn { display: inline-block; background: var(--accent); color: white; text-decoration: none; padding: 12px 30px; border-radius: 50px; font-weight: 600; font-size: 15px; border: 2px solid var(--accent); transition: all 0.4s ease; box-shadow: 0 5px 15px rgba(38, 166, 154, 0.2); text-align: center; }
+        .live-btn:hover { background: transparent; color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(38, 166, 154, 0.3); }
+
+        /* --- SAREE TYPES GRID --- */
+        .saree-header { padding: 60px 8% 20px; text-align: center; }
+        .saree-header h1 { font-size: 40px; margin-bottom: 10px; }
+        .saree-header span { color: var(--accent); }
+        .types-container { margin: 0 8% 60px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .type-item { background: var(--card-bg); padding: 25px; border-radius: 15px; border-left: 5px solid var(--accent); transition: 0.3s; border-top: 1px solid var(--nav-border); box-shadow: var(--card-shadow); }
+        .type-item:hover { transform: translateY(-5px); background: var(--bg); border-color: #80cbc4; }
+        .type-item h4 { color: var(--accent); margin-bottom: 8px; font-size: 18px; }
+        .type-item p { font-size: 14px; color: var(--gray-text); line-height: 1.5; }
+
+        footer { text-align: center; padding: 40px; border-top: 1px solid var(--nav-border); color: var(--gray-text); font-size: 14px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- HAMBURGER MENU CENTER LOGIC --- */
+        @media (max-width: 1024px) {
+            .navbar { padding: 15px 30px; }
+            .hamburger { display: flex }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: var(--nav-bg);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center; /* Center Vertically */
+                gap: 30px;
+                transform: translateY(-100%); /* Start from top */
+                transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+                z-index: 1000;
+            }
+
+            .nav-links.active { transform: translateY(0); }
+            .nav-links a { font-size: 20px; }
+
+            /* Mobile Social Icons */
+            .nav-right .social-icons, .nav-divider { display: none; }
+            .nav-links .mobile-socials { 
+                display: flex !important; 
+                gap: 5px; 
+                margin-top: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .nav-links .mobile-socials i { font-size: 22px; color: var(--accent); }
+        }
+
+        @media (max-width: 768px) {
+            .types-container { grid-template-columns: 1fr; }
+            .about-box { flex-direction: column; padding: 40px 20px; text-align: center; }
+            .about-image { width: 100%; height: auto; }
+            .saree-header h1 { font-size: 30px; }
+        }
+    </style>
+</head>
+<body> 
+
+    <div class="search-top-bar" id="searchBar">
+        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+            <input type="text" placeholder="Search for sarees..." style="width: 90%; background: none; border: none; color: var(--text); outline: none; font-size: 18px;">
+            <i class="fas fa-times" style="cursor:pointer; color: var(--text);" onclick="toggleSearch()"></i>
+        </div>
+    </div>
+
+    <header class="navbar">
+        <a href="index.html" class="logo-section"> dikshii</a>
+        
+        <div class="hamburger" onclick="toggleMenu()">
+            <i class="fas fa-bars" id="menuIcon"></i>
+        </div>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+             <div class="nav-divider"></div>
+            
+            <div class="mobile-socials social-icons" style="display: none;">
+                <a href="https://twitter.com/@dikshita_m2408" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/dikshitaaaa_08" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/dikshita-mittal-a14922379" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/Dikshita1824" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </ul>
+
+        <div class="nav-right">
+            <div class="social-icons">
+                <a href="https://twitter.com/@dikshita_m2408" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/dikshitaaaa_08" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/dikshita-mittal-a14922379" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/Dikshita1824" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+            <div class="nav-divider"></div>
+            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-sun"></i></button>
+            <button class="search-btn" onclick="toggleSearch()"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <section class="about-box">
+        <div class="about-text">
+            <h2>About This Website</h2>
+            <p>This website has been created using HTML, CSS, and Bootstrap. It is my first web development project, and building this website has been a very valuable learning experience for me.</p>
+            <p>While working on this project, I learned how to design a proper website layout, use navigation bars, add images and sections, and style the pages using CSS.</p>
+            <div class="about-badges">
+                <div class="badge-item"><i class="fas fa-code"></i> HTML5 & CSS3</div>
+                <div class="badge-item"><i class="fas fa-th-large"></i> Bootstrap</div>
+                <div class="badge-item"><i class="fas fa-check"></i> Responsive Design</div>
+            </div>
+        </div>
+        <div class="about-image-container">
+            <div class="about-image">
+                <img src="ss1.png" alt="Panihari Logo">
+            </div>
+            <a href="https://saree-website-two.vercel.app" target="_blank" class="live-btn">
+                <i class="fas fa-external-link-alt"></i> View Live Project
+            </a>
+        </div>
+    </section>
+
+    <section class="saree-header">
+        <h1>Types of <span>Indian Sarees</span></h1>
+        <p style="max-width: 800px; margin: 0 auto; color: var(--gray-text);">India is known for its rich textile heritage, and each state has its own unique saree style.</p>
+    </section>
+
+    <div class="types-container">
+        <div class="type-item"><h4>Kanjivaram Silk – Tamil Nadu</h4><p>A traditional silk saree known for its rich colors and gold zari borders.</p></div>
+        <div class="type-item"><h4>Gota Patti – Rajasthan</h4><p>Features decorative gold and silver ribbon embroidery.</p></div>
+        <div class="type-item"><h4>Banarasi – Uttar Pradesh</h4><p>Famous for fine silk and intricate zari work.</p></div>
+        <div class="type-item"><h4>Pashmina – Jammu & Kashmir</h4><p>Soft, lightweight, and warm sarees made from fine wool.</p></div>
+        <div class="type-item"><h4>Nauvari – Maharashtra</h4><p>A nine-yard saree draped in a unique style.</p></div>
+        <div class="type-item"><h4>Patola – Gujarat</h4><p>Handwoven sarees with bright colors and geometric designs.</p></div>
+        <div class="type-item"><h4>Chiffon – All India</h4><p>Lightweight and easy to drape, suitable for daily wear.</p></div>
+        <div class="type-item"><h4>Organza – Varanasi</h4><p>Crisp-textured sarees with a classy look.</p></div>
+        <div class="type-item"><h4>Kasavu – Kerala</h4><p>Simple white or cream sarees with golden borders.</p></div>
+        <div class="type-item"><h4>Phulkari – Punjab</h4><p>Known for colorful floral embroidery.</p></div>
+        <div class="type-item"><h4>Mysore Silk – Karnataka</h4><p>Smooth and lightweight silk sarees.</p></div>
+        <div class="type-item"><h4>Sambalpuri – Odisha</h4><p>Famous for its traditional hand-woven 'Ikat'.</p></div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; padding: 40px 8%; background: var(--card-bg); border-top: 1px solid var(--nav-border);">
+        <a href="bakery.html" style="text-decoration: none; background: var(--accent); color: white; padding: 12px 35px; border-radius: 50px; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-arrow-left"></i> Prev
+        </a>
+        <a href="jewellery.html" style="text-decoration: none; background: var(--accent); color: white; padding: 12px 35px; border-radius: 50px; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 10px;">
+            Next <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+
+     <footer style="background: var(--card-bg); border-top: 1px solid var(--nav-border); padding: 50px 8% 20px; margin-top: 50px; color: var(--text);">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; text-align: center; align-items: start;">
+            
+            <div>
+                <h4 style="color: var(--accent); margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Contact Us</h4>
+                <p style="font-size: 14px; margin-bottom: 8px;"><i class="fas fa-envelope" style="color: var(--accent); margin-right: 8px;"></i> dikshitamittal620@gmail.com</p>
+                <p style="font-size: 14px;"><i class="fas fa-phone-alt" style="color: var(--accent); margin-right: 8px;"></i> +91 1234567890</p>
+            </div>
+
+            <div>
+                <h3 style="color: var(--text); margin-bottom: 10px; font-size: 20px;">Dikshita Mittal</h3>
+                <p style="color: var(--accent); font-weight: 500; font-size: 14px;">
+                <i class="fas fa-university"></i> 
+                <a href="https://www.dezyneecole.com/" target="_blank" style="color: inherit; text-decoration: none; border-bottom: 1px dashed var(--accent);">
+                    Dezyne E'cole College, Ajmer
+                </a>
+            </p>
+            </div>
+
+            <div>
+                <h4 style="color: var(--accent); margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Quick Links</h4>
+                <div style="display: flex; justify-content: center; gap: 15px; font-size: 14px; flex-wrap: wrap;">
+                    <style>
+                        .footer-link {
+                            position: relative;
+                            color: var(--gray-text);
+                            text-decoration: none;
+                            transition: 0.3s;
+                            padding-bottom: 2px;
+                        }
+                        .footer-link::after {
+                            content: '';
+                            position: absolute;
+                            width: 0;
+                            height: 2px;
+                            bottom: 0;
+                            left: 0;
+                            background-color: var(--accent);
+                            transition: width 0.3s ease;
+                        }
+                        .footer-link:hover { color: var(--accent); }
+                        .footer-link:hover::after { width: 100%; }
+                    </style>
+                    <a href="index.html" class="footer-link">Home</a>
+                    <a href="about.html" class="footer-link">About</a>
+                    <a href="projects.html" class="footer-link">Projects</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 20px; margin: 30px 0; padding: 20px 0; border-top: 1px solid var(--nav-border);">
+            <a href="https://twitter.com/@dikshita_m2408" target="_blank" style="color: var(--text); font-size: 18px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com/dikshitaaaa_08" target="_blank" style="color: var(--text); font-size: 18px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/in/dikshita-mittal-a14922379" target="_blank" style="color: var(--text); font-size: 18px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/Dikshita1824" target="_blank" style="color: var(--text); font-size: 18px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'"><i class="fab fa-github"></i></a>
+            
+        </div>
+
+        <div style="text-align: center; color: var(--gray-text); font-size: 12px; opacity: 0.8;">
+            <p>&copy; 2026 <b>Dikshita Mittal</b> | All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle("light");
+            const icon = document.querySelector(".theme-toggle i");
+            icon.className = document.body.classList.contains("light") ? "fas fa-moon" : "fas fa-sun";
+        }
+        function toggleSearch() {
+            document.getElementById("searchBar").classList.toggle("active");
+        }
+        
+        function toggleMenu() {
+            const nav = document.getElementById("navLinks");
+            const icon = document.getElementById("menuIcon");
+            nav.classList.toggle("active");
+            
+            if(nav.classList.contains("active")) {
+                icon.className = "fas fa-times";
+                document.body.style.overflow = "hidden"; // Scroll band jab menu khula ho
+            } else {
+                icon.className = "fas fa-bars";
+                document.body.style.overflow = "auto";
+            }
+        }
+
+        // Menu link par click karte hi menu band ho jaye
+        document.querySelectorAll('.nav-links li a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById("navLinks").classList.remove("active");
+                document.getElementById("menuIcon").className = "fas fa-bars";
+                document.body.style.overflow = "auto";
+            });
+        });
+    </script>
+</body>
+</html>
